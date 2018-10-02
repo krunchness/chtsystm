@@ -16,7 +16,37 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('chat-message', require('./components/ChatMessage.vue'));
+Vue.component('chat-log', require('./components/ChatLog.vue'));
+Vue.component('chat-composer', require('./components/ChatComposer.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+    	messages: []
+    },
+    methods: {
+    	addMessage(message){
+    		// Add to existing messages
+    		this.messages.push(message);
+    		// Persist to the database etc
+    		axios.post('/laravel/chat_system/public/messages', message).then(response => {
+
+    		});
+    	}
+    },
+    created(){
+    	axios.get('/laravel/chat_system/public/messages').then(response => {
+    		this.messages = response.data
+    	});
+
+    	// Echo.join('chatroom')
+    	// 	.listen('MessagePosted', (e) => {
+    	// 		this.messages.push({
+    	// 			message: e.message.message,
+    	// 			user: e.user,
+    	// 		});
+    	// 		console.log(e); 
+    	// 	});
+    }
 });
